@@ -1,1 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News2Day - Live Global & Irish News</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { red: '#DC2626', dark: '#0F172A', card: '#1E293B' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
 
+    <!-- Top Bar -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="#" class="text-2xl font-black tracking-wider uppercase text-white flex items-center">
+                    NEWS<span class="text-red-600">2</span>DAY
+                </a>
+                <span class="hidden sm:inline-block text-xs bg-red-600/20 text-red-400 font-semibold px-2.5 py-1 rounded-full border border-red-500/30">
+                    <i class="fa-solid fa-circle text-[8px] animate-pulse mr-1 text-red-500"></i> LIVE DESK (Nov 12, 2026+)
+                </span>
+            </div>
+            
+            <div class="flex items-center space-x-4 text-sm font-medium">
+                <span id="live-clock" class="text-slate-400 hidden md:inline">Thu, 12 Nov 2026, 17:22</span>
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Breaking News Ticker -->
+        <div class="bg-red-600 text-white text-xs font-bold py-1.5 px-4 overflow-hidden flex items-center">
+            <span class="bg-black/30 px-2 py-0.5 rounded uppercase tracking-wider text-[10px] mr-3 shrink-0">Breaking Live</span>
+            <div class="whitespace-nowrap animate-[marquee_25s_linear_infinite] overflow-x-hidden">
+                <span class="mx-4">• [IRELAND] Major traffic restrictions and security cordons enforced across Dublin for EU-led political summits.</span>
+                <span class="mx-4">• [UK] Prime Minister delivers key address on electrification and energy security at COP31 climate summit.</span>
+                <span class="mx-4">• [USA] White House issues official Proclamations honouring military veterans nationwide.</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Hubs -->
+    <nav class="bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-16 z-40 overflow-x-auto">
+        <div class="max-w-7xl mx-auto px-4 flex space-x-6 text-sm font-semibold whitespace-nowrap py-3">
+            <button onclick="filterCategory('all')" class="nav-btn text-red-500 hover:text-red-400 transition">All Feeds</button>
+            <button onclick="filterCategory('ireland')" class="nav-btn text-slate-300 hover:text-red-400 transition">Ireland</button>
+            <button onclick="filterCategory('uk')" class="nav-btn text-slate-300 hover:text-red-400 transition">UK</button>
+            <button onclick="filterCategory('usa')" class="nav-btn text-slate-300 hover:text-red-400 transition">USA</button>
+            <button onclick="filterCategory('politics')" class="nav-btn text-slate-300 hover:text-red-400 transition"><i class="fa-solid fa-landmark mr-1 text-red-500"></i> Political Hub</button>
+            <button onclick="filterCategory('war')" class="nav-btn text-slate-300 hover:text-red-400 transition"><i class="fa-solid fa-shield-halved mr-1 text-red-500"></i> Situation Room</button>
+            <button onclick="filterCategory('weather')" class="nav-btn text-slate-300 hover:text-red-400 transition"><i class="fa-solid fa-cloud-sun mr-1 text-blue-400"></i> Weather Live</button>
+            <button onclick="filterCategory('traffic')" class="nav-btn text-slate-300 hover:text-red-400 transition"><i class="fa-solid fa-car-side mr-1 text-amber-500"></i> Dublin Traffic Tracker</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- News Grid (Left 2 Columns) -->
+        <section class="lg:col-span-2 space-y-6" id="news-container">
+            
+            <!-- Article Card: Ireland / Politics -->
+            <article class="news-card bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-slate-700 transition shadow-lg" data-category="ireland politics">
+                <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                    <span class="bg-red-500/10 text-red-400 font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">Ireland • Political Hub</span>
+                    <span>12 Nov 2026 • 2h ago</span>
+                </div>
+                <h2 class="text-xl font-bold text-white mb-2 hover:text-red-400 cursor-pointer" onclick="openModal('Dublin EU Summit Restrictions', 'Dublin City Council and Gardaí have instituted extensive traffic restrictions and security cordons across the IFSC and south city areas surrounding the Convention Centre as Ireland hosts major EU-led political summits. Taoiseach Micheál Martin emphasized that security stakes are at their highest level in years.')">
+                    Major Traffic & Security Restrictions Take Effect as Dublin Hosts High-Level EU Political Summits
+                </h2>
+                <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                    Extensive cordons, rolling road closures, and marine restrictions are in place across Dublin city centre as heads of state gather for landmark European discussions.
+                </p>
+                <div class="flex items-center justify-between pt-4 border-t border-slate-800 text-xs text-slate-400">
+                    <span>Source: The Journal / RTÉ News</span>
+                    <button onclick="openModal('Dublin EU Summit Restrictions', 'Dublin City Council and Gardaí have instituted extensive traffic restrictions and security cordons across the IFSC and south city areas surrounding the Convention Centre as Ireland hosts major EU-led political summits. Taoiseach Micheál Martin emphasized that security stakes are at their highest level in years.')" class="text-red-400 font-semibold hover:underline">Read Full Dispatch &rarr;</button>
+                </div>
+            </article>
+
+            <!-- Article Card: UK / Politics -->
+            <article class="news-card bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-slate-700 transition shadow-lg" data-category="uk politics">
+                <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                    <span class="bg-blue-500/10 text-blue-400 font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">UK • Political Hub</span>
+                    <span>12 Nov 2026 • 5h ago</span>
+                </div>
+                <h2 class="text-xl font-bold text-white mb-2 hover:text-red-400 cursor-pointer" onclick="openModal('UK PM COP31 Address', 'At the COP31 climate summit, the UK Prime Minister announced landmark commitments toward national energy security through accelerated electrification, alongside appointing Dame Madeline Alessandri as the first special representative for climate security.')">
+                    PM Pledges New Era of Climate Leadership & Energy Security in COP31 Address
+                </h2>
+                <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                    The UK government has reinforced its 2050 net-zero targets and emphasized nationwide electrification to shield households from global fossil fuel volatility.
+                </p>
+                <div class="flex items-center justify-between pt-4 border-t border-slate-800 text-xs text-slate-400">
+                    <span>Source: GOV.UK</span>
+                    <button onclick="openModal('UK PM COP31 Address', 'At the COP31 climate summit, the UK Prime Minister announced landmark commitments toward national energy security through accelerated electrification, alongside appointing Dame Madeline Alessandri as the first special representative for climate security.')" class="text-red-400 font-semibold hover:underline">Read Full Dispatch &rarr;</button>
+                </div>
+            </article>
+
+            <!-- Article Card: USA / Situation Room -->
+            <article class="news-card bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-slate-700 transition shadow-lg" data-category="usa war">
+                <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                    <span class="bg-purple-500/10 text-purple-400 font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">USA • Situation Room</span>
+                    <span>12 Nov 2026 • 8h ago</span>
+                </div>
+                <h2 class="text-xl font-bold text-white mb-2 hover:text-red-400 cursor-pointer" onclick="openModal('Global Fusion Energy & Diplomatic Updates', 'Ambassador Wells Griffith delivered the official U.S. statement at the World Fusion Energy Group meetings in Vienna, highlighting international collaboration in advancing commercial fusion energy. Concurrently, federal agencies continue monitoring health and security protocols globally.')">
+                    U.S. Mission Outlines Advanced Fusion Energy Strategy at International Vienna Summit
+                </h2>
+                <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                    Delegates convened in Vienna to transition fusion science into commercial reality, strengthening strategic security and international partnerships.
+                </p>
+                <div class="flex items-center justify-between pt-4 border-t border-slate-800 text-xs text-slate-400">
+                    <span>Source: U.S. State Department</span>
+                    <button onclick="openModal('Global Fusion Energy & Diplomatic Updates', 'Ambassador Wells Griffith delivered the official U.S. statement at the World Fusion Energy Group meetings in Vienna, highlighting international collaboration in advancing commercial fusion energy. Concurrently, federal agencies continue monitoring health and security protocols globally.')" class="text-red-400 font-semibold hover:underline">Read Full Dispatch &rarr;</button>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Sidebar (Right Column): Weather & Traffic Trackers -->
+        <aside class="space-y-6">
+            
+            <!-- Live Weather Forecasts (Ireland, UK, USA) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg" data-category="weather">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                    <i class="fa-solid fa-cloud-sun text-blue-400 mr-2"></i> Live Weather Feeds
+                </h3>
+                <div class="space-y-4 text-sm">
+                    <div class="bg-slate-800/60 p-3.5 rounded-xl border border-slate-700/50">
+                        <div class="flex justify-between font-semibold text-white mb-1">
+                            <span>Dublin, Ireland</span>
+                            <span class="text-blue-400">6°C, Clear</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Night forecast: Low 0°C | Wind: North 6 mph</p>
+                    </div>
+                    <div class="bg-slate-800/60 p-3.5 rounded-xl border border-slate-700/50">
+                        <div class="flex justify-between font-semibold text-white mb-1">
+                            <span>London, United Kingdom</span>
+                            <span class="text-blue-400">6°C, Clear</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Night forecast: Low 0°C | Wind: North 7 mph</p>
+                    </div>
+                    <div class="bg-slate-800/60 p-3.5 rounded-xl border border-slate-700/50">
+                        <div class="flex justify-between font-semibold text-white mb-1">
+                            <span>New York, USA</span>
+                            <span class="text-amber-400">15°C, Rain Risk</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Active thunderstorm alerts & high precipitation probability</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dublin Traffic Tracker -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg" data-category="traffic">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                    <i class="fa-solid fa-car-side text-amber-500 mr-2"></i> Dublin Traffic Tracker
+                </h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex items-start space-x-3 bg-red-950/20 border border-red-500/20 p-3 rounded-xl">
+                        <i class="fa-solid fa-triangle-exclamation text-red-500 mt-1"></i>
+                        <div>
+                            <p class="font-bold text-white text-xs">IFSC & Convention Centre</p>
+                            <p class="text-xs text-slate-300">Major road closures and sterile zones active due to EU political summits.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 bg-amber-950/20 border border-amber-500/20 p-3 rounded-xl">
+                        <i class="fa-solid fa-circle-exclamation text-amber-500 mt-1"></i>
+                        <div>
+                            <p class="font-bold text-white text-xs">National Gallery & 3Arena Corridors</p>
+                            <p class="text-xs text-slate-300">Rolling traffic restrictions and pedestrian-only walking routes in effect.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 bg-emerald-950/20 border border-emerald-500/20 p-3 rounded-xl">
+                        <i class="fa-solid fa-train-subway text-emerald-500 mt-1"></i>
+                        <div>
+                            <p class="font-bold text-white text-xs">Public Transit Advisory</p>
+                            <p class="text-xs text-slate-300">Commuters advised to utilize train and DART services; bus diversions active.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- Article Reader Modal -->
+    <div id="article-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <span id="modal-tag" class="text-xs bg-red-600/20 text-red-400 font-bold px-2.5 py-1 rounded-md uppercase">News Flash</span>
+            <h2 id="modal-title" class="text-2xl font-black text-white mt-3 mb-4"></h2>
+            <p id="modal-body" class="text-slate-300 text-base leading-relaxed mb-6"></p>
+            <div class="flex justify-end">
+                <button onclick="closeModal()" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl text-sm font-semibold transition">Close Dispatch</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-8 mt-auto text-center text-xs text-slate-500">
+        <p>&copy; 2026 News2Day (news2day.world). All live automated feeds restricted strictly to post-November 12, 2026 updates.</p>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            const icon = document.getElementById('theme-icon');
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
+        }
+
+        function filterCategory(cat) {
+            const cards = document.querySelectorAll('.news-card, aside > div');
+            cards.forEach(card => {
+                if(cat === 'all' || card.getAttribute('data-category').includes(cat)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('text-red-500'));
+            event.target.classList.add('text-red-500');
+        }
+
+        function openModal(title, body) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerText = body;
+            document.getElementById('article-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('article-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
