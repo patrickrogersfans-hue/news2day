@@ -8,36 +8,150 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-[#070A13] text-slate-100 font-sans antialiased min-h-screen flex flex-col">
-    <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <img src="image_b60d42.jpg" alt="Logo" class="h-10 w-10 rounded-full border border-red-600 object-cover">
-            <h1 class="text-xl font-black tracking-wider uppercase text-white">NEWS<span class="text-red-600">2</span>DAY</h1>
-        </div>
-        <a href="admin.html" class="bg-red-600/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold">Admin Panel</a>
-    </header>
-    <main class="max-w-4xl mx-auto p-4 space-y-6 flex-grow w-full">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-            <span class="bg-red-600/20 text-red-400 text-xs font-bold px-3 py-1 rounded border border-red-500/30">Dublin Breaking • Tonight</span>
-            <h2 class="text-2xl font-black text-white mt-3 mb-2">Heavy Garda Presence in Dublin City Centre as Protesters Gather Near Dáil Éireann</h2>
-            <p class="text-slate-300 text-sm leading-relaxed mb-4">Dublin City Centre is experiencing heightened security and large crowds tonight as demonstrators gather near Dáil Éireann. An Garda Síochána has deployed public order units to manage traffic flows and ensure public safety.</p>
-        </div>
-        <div id="custom-articles-container" class="space-y-6"></div>
-    </main>
-    <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-        <p>&copy; 2026 News2Day (news2day.world)</p>
-    </footer>
-    <script>
-        const saved = JSON.parse(localStorage.getItem('news2day_articles') || '[]');
-        const container = document.getElementById('custom-articles-container');
-        saved.forEach(art => {
-            container.innerHTML += `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                    <span class="bg-red-600/20 text-red-400 text-xs font-bold px-3 py-1 rounded border border-red-500/30">${art.tag}</span>
-                    <h2 class="text-2xl font-black text-white mt-3 mb-2">${art.title}</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed">${art.body}</p>
+
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <img src="image_b60d42.jpg" alt="Logo" class="h-12 w-12 rounded-full border-2 border-red-600 object-cover shadow-lg">
+                <div>
+                    <a href="index.html" class="text-2xl font-black tracking-wider uppercase text-white">NEWS<span class="text-red-600">2</span>DAY</a>
+                    <p class="text-[10px] text-slate-400 tracking-widest uppercase">Your Daily Dose of Truth & News</p>
                 </div>
-            `;
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="text-xs bg-red-600/10 text-red-400 font-bold px-3 py-1.5 rounded-full border border-red-500/35 hidden sm:inline">LIVE DESK: NOV 12, 2026</span>
+                <a href="admin.html" class="text-xs bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-xl transition shadow-md shadow-red-600/30">Admin Panel</a>
+            </div>
+        </div>
+
+        <!-- Breaking Ticker -->
+        <div class="bg-red-600 text-white text-xs font-bold py-2 px-4 flex items-center overflow-hidden">
+            <span class="bg-black/30 px-2.5 py-1 rounded uppercase tracking-wider text-[10px] mr-3 shrink-0"><i class="fa-solid fa-bolt mr-1 text-amber-300"></i> 60s Ticker</span>
+            <div id="breaking-ticker" class="truncate">• [DUBLIN] Gardaí maintain heavy security cordon around Dáil Éireann as evening demonstrations continue.</div>
+        </div>
+    </header>
+
+    <!-- Navigation Hubs -->
+    <nav class="bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-20 z-40 overflow-x-auto">
+        <div class="max-w-7xl mx-auto px-4 flex space-x-6 text-sm font-semibold whitespace-nowrap py-3.5">
+            <button onclick="filterCategory('all')" class="nav-btn text-red-500 hover:text-red-400 transition">All Feeds</button>
+            <button onclick="filterCategory('dublin')" class="nav-btn text-slate-300 hover:text-red-400 transition">Dublin Live</button>
+            <button onclick="filterCategory('politics')" class="nav-btn text-slate-300 hover:text-red-400 transition">Political Hub</button>
+            <button onclick="filterCategory('sport')" class="nav-btn text-slate-300 hover:text-red-400 transition">Sport</button>
+            <button onclick="filterCategory('war')" class="nav-btn text-slate-300 hover:text-red-400 transition">Situation Room</button>
+            <button onclick="filterCategory('weather')" class="nav-btn text-slate-300 hover:text-red-400 transition">Weather</button>
+            <button onclick="filterCategory('traffic')" class="nav-btn text-slate-300 hover:text-red-400 transition">Dublin M50 Traffic</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
+        
+        <!-- News Feed -->
+        <section class="lg:col-span-2 space-y-6">
+            <div id="custom-articles-container" class="space-y-6"></div>
+
+            <!-- Default Feature Article: Dublin Protest -->
+            <article class="news-card bg-slate-900 border border-slate-800 rounded-2xl p-7 shadow-xl" data-category="dublin politics">
+                <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                    <span class="bg-red-600/20 text-red-400 font-bold px-3 py-1 rounded uppercase border border-red-500/30">Dublin Breaking • Tonight</span>
+                    <span>12 Nov 2026</span>
+                </div>
+                <h2 class="text-2xl font-black text-white mb-3 leading-snug">Heavy Garda Presence in Dublin City Centre as Protesters Gather Near Dáil Éireann</h2>
+                <p class="text-slate-300 text-sm mb-4 leading-relaxed">Dublin City Centre is experiencing heightened security and large crowds tonight as demonstrators gather near Dáil Éireann and surrounding thoroughfares. An Garda Síochána has deployed public order units to manage traffic flows and ensure public safety.</p>
+            </article>
+
+            <!-- Political Hub Section -->
+            <article class="news-card bg-slate-900 border border-slate-800 rounded-2xl p-7 shadow-xl" data-category="politics">
+                <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                    <span class="bg-blue-600/20 text-blue-400 font-bold px-3 py-1 rounded uppercase border border-blue-500/30">Political Hub • Policy & Diplomacy</span>
+                    <span>12 Nov 2026</span>
+                </div>
+                <h2 class="text-2xl font-black text-white mb-3 leading-snug">Taoiseach Outlines New Fiscal Framework at Dublin European Security Summit</h2>
+                <p class="text-slate-300 text-sm mb-4 leading-relaxed">Taoiseach Micheál Martin delivered a keynote address at Dublin Castle earlier today, outlining strategic regional priorities and fiscal allocations for the upcoming winter legislative term.</p>
+            </article>
+
+            <!-- Sport Section -->
+            <article class="news-card bg-slate-900 border border-slate-800 rounded-2xl p-7 shadow-xl" data-category="sport">
+                <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                    <span class="bg-emerald-600/20 text-emerald-400 font-bold px-3 py-1 rounded uppercase border border-emerald-500/30">Sport Desk • Rugby & GAA</span>
+                    <span>12 Nov 2026</span>
+                </div>
+                <h2 class="text-2xl font-black text-white mb-3 leading-snug">Irish Provinces Gear Up for Heavy Winter Fixtures Amid High Stakes and Squad Pressures</h2>
+                <p class="text-slate-300 text-sm mb-4 leading-relaxed">As the autumn rugby series reaches its peak, Irish provinces face intense scheduling pressures across domestic and European competitions.</p>
+            </article>
+
+            <!-- Situation Room (War / Conflicts) -->
+            <article class="news-card bg-slate-900 border border-slate-800 rounded-2xl p-7 shadow-xl" data-category="war">
+                <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                    <span class="bg-red-600/20 text-red-400 font-bold px-3 py-1 rounded uppercase border border-red-500/30">Situation Room • Global Security</span>
+                    <span>12 Nov 2026</span>
+                </div>
+                <h2 class="text-2xl font-black text-white mb-3 leading-snug">Situation Room: Strategic Intelligence Briefing on International Defense Postures</h2>
+                <p class="text-slate-300 text-sm mb-4 leading-relaxed">Military analysts and international defense councils have released updated operational assessments regarding ongoing geopolitical friction points.</p>
+            </article>
+        </section>
+
+        <!-- Sidebar: Weather & Dublin M50 Traffic -->
+        <aside class="space-y-6">
+            <!-- Weather -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl" data-category="weather">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-cloud-sun text-blue-400 mr-2"></i> Live Weather</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="bg-slate-800/70 p-3.5 rounded-xl">
+                        <div class="flex justify-between font-bold text-white mb-1"><span>Dublin, Ireland</span><span class="text-blue-400">6°C • Clear</span></div>
+                        <p class="text-xs text-slate-300">Crisp autumn conditions. Low 0°C.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Traffic -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl" data-category="traffic">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-car-side text-amber-500 mr-2"></i> Dublin M50 Traffic</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="bg-red-950/30 border border-red-500/30 p-3.5 rounded-xl">
+                        <p class="font-bold text-white text-xs">Kildare St & Molesworth St</p>
+                        <p class="text-xs text-slate-300">Closed to vehicular traffic due to ongoing protests near Dáil Éireann.</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-slate-900 border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+        <p>&copy; 2026 News2Day (news2day.world). Restricted to November 12, 2026 onwards.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('custom-articles-container');
+            const savedArticles = JSON.parse(localStorage.getItem('news2day_articles') || '[]');
+            savedArticles.forEach(art => {
+                const card = document.createElement('article');
+                card.className = "news-card bg-slate-900 border border-slate-800 rounded-2xl p-7 shadow-xl";
+                card.setAttribute('data-category', art.category);
+                card.innerHTML = `
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                        <span class="bg-red-600/20 text-red-400 font-bold px-3 py-1 rounded uppercase border border-red-500/30">${art.tag}</span>
+                        <span>12 Nov 2026 • Published</span>
+                    </div>
+                    <h2 class="text-2xl font-black text-white mb-3 leading-snug">${art.title}</h2>
+                    <p class="text-slate-300 text-sm mb-4 leading-relaxed">${art.body}</p>
+                `;
+                container.prepend(card);
+            });
         });
+
+        function filterCategory(cat) {
+            document.querySelectorAll('.news-card, aside > div').forEach(card => {
+                if(cat === 'all' || card.getAttribute('data-category').includes(cat)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
     </script>
 </body>
 </html>
