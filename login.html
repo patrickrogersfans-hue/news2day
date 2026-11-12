@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News2Day | Admin Login</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #101010;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: #1c1c1c;
+      padding: 35px;
+      border-radius: 12px;
+      border: 1px solid #333;
+    }
+
+    .logo {
+      color: #e5232e;
+      font-size: 34px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #aaa;
+      margin: 10px 0 30px;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 7px;
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 13px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: #111;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      background: #e5232e;
+      color: white;
+      border: 0;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #message {
+      margin-top: 18px;
+      text-align: center;
+      color: #ff6666;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="login-box">
+    <div class="logo">NEWS2DAY</div>
+    <p class="subtitle">Editorial Control Centre</p>
+
+    <form id="login-form">
+      <label for="username">Administrator Username</label>
+      <input
+        id="username"
+        type="text"
+        autocomplete="username"
+        required
+      >
+
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button type="submit" id="login-button">
+        Secure Login
+      </button>
+
+      <p id="message" role="alert"></p>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById("login-form");
+    const message = document.getElementById("message");
+    const button = document.getElementById("login-button");
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      message.textContent = "";
+      button.disabled = true;
+      button.textContent = "Checking credentials...";
+
+      try {
+        const response = await fetch("/api/admin/login", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            username: document.getElementById("username").value,
+            password: document.getElementById("password").value
+          })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || "Login failed.");
+        }
+
+        window.location.replace("/admin.html");
+
+      } catch (error) {
+        message.textContent = error.message;
+        button.disabled = false;
+        button.textContent = "Secure Login";
+      }
+    });
+  </script>
+</body>
+</html>
