@@ -4,80 +4,298 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>News2Day | Your Daily Dose of Bullshit</title>
-<meta name="description" content="Breaking news from Ireland and around the world.">
+<meta name="theme-color" content="#101010">
+<title>News2Day | Admin Newsroom</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  background: #f1f1f1;
+  font-family: Arial, sans-serif;
+}
+
+.admin-header {
+  background: #101010;
+  color: white;
+  padding: 25px;
+  text-align: center;
+  border-bottom: 4px solid #e50914;
+}
+
+.admin-header h1 {
+  font-size: 34px;
+}
+
+.admin-header h1 span { color: #e50914; }
+
+.admin-header p {
+  color: #bbb;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+
+.admin-container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 15px;
+}
+
+.admin-notice {
+  background: #fff3cd;
+  border: 1px solid #e3ca83;
+  padding: 14px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.admin-panel {
+  background: white;
+  padding: 25px;
+  margin-bottom: 25px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.admin-panel h2 {
+  font-size: 21px;
+  border-bottom: 3px solid #e50914;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.admin-form label {
+  display: block;
+  font-weight: bold;
+  font-size: 13px;
+  margin: 16px 0 7px;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.admin-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.admin-form .article-content {
+  min-height: 300px;
+}
+
+.admin-form input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+.admin-button {
+  background: #e50914;
+  color: white;
+  padding: 13px 22px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  margin: 15px 8px 0 0;
+}
+
+.admin-button:hover {
+  background: #b90009;
+}
+
+.draft-button {
+  background: #333;
+}
+
+.secondary-button {
+  background: #555;
+}
+
+.admin-status {
+  padding: 12px;
+  margin-top: 15px;
+  display: none;
+  background: #eee;
+}
+
+.article-list {
+  margin-top: 15px;
+}
+
+.article-item {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  overflow-wrap: anywhere;
+}
+
+.article-item h3 {
+  margin-bottom: 5px;
+}
+
+.article-item button {
+  margin: 8px 5px 0 0;
+}
+
+.admin-footer {
+  background: #101010;
+  color: white;
+  text-align: center;
+  padding: 25px;
+}
+
+@media(max-width:600px) {
+  .admin-panel { padding: 16px; }
+  .admin-header h1 { font-size: 27px; }
+}
+</style>
 </head>
+
 <body>
 
-<header>
-  <div class="topbar">IRELAND | WORLD | SPORT <span id="date"></span></div>
-  <div class="branding">
-    <h1>NEWS<span>2</span>DAY</h1>
-    <p>Your Daily Dose of Bullshit</p>
-  </div>
-  <nav>
-    <a href="#breaking">Breaking</a>
-    <a href="#irish">Irish News</a>
-    <a href="#politics">Political Hub</a>
-    <a href="#situation">Situation Room</a>
-    <a href="#sport">Sport</a>
-  </nav>
+<header class="admin-header">
+  <h1>NEWS<span>2</span>DAY</h1>
+  <p>ADMINISTRATION & EDITORIAL NEWSROOM</p>
 </header>
 
-<main>
-  <div class="livebar">● LIVE NEWSROOM <span>Updates every 60 seconds</span></div>
+<main class="admin-container">
 
-  <section id="breaking">
-    <h2>BREAKING NEWS</h2>
-    <div id="breaking-news" class="news-grid">Loading breaking news...</div>
+  <div class="admin-notice">
+    <strong>ADMIN SECURITY:</strong>
+    This is the editorial dashboard interface. Publishing,
+    editing and deleting require the authenticated Cloudflare
+    backend, which we will configure separately. Do not publish
+    this dashboard as a secured admin system until that is installed.
+  </div>
+
+  <section class="admin-panel">
+    <h2>EDITORIAL CONTROL CENTRE</h2>
+    <p>Welcome to the News2Day editorial newsroom.</p>
+    <p>Manage news articles, breaking news and editorial content.</p>
+    <button class="admin-button" onclick="loadAdminArticles()">
+      REFRESH ARTICLE LIST
+    </button>
   </section>
 
-  <section>
-    <h2>LATEST NEWS</h2>
-    <div id="latest-news" class="news-grid">Loading latest news...</div>
+  <section class="admin-panel">
+    <h2>CREATE NEW NEWS ARTICLE</h2>
+
+    <form id="article-form" class="admin-form">
+
+      <label for="article-title">Article Headline</label>
+      <input
+        type="text"
+        id="article-title"
+        maxlength="180"
+        required
+        placeholder="Enter news headline">
+
+      <label for="article-summary">Article Introduction</label>
+      <textarea
+        id="article-summary"
+        maxlength="500"
+        required
+        placeholder="Write the article introduction"></textarea>
+
+      <label for="article-content">Full News Report</label>
+      <textarea
+        id="article-content"
+        class="article-content"
+        required
+        placeholder="Write the complete news report here..."></textarea>
+
+      <label for="article-category">News Category</label>
+      <select id="article-category" required>
+        <option value="">Select Category</option>
+        <option value="Irish News">Irish News</option>
+        <option value="Dublin News">Dublin News</option>
+        <option value="Politics">Political Hub</option>
+        <option value="Situation Room">Situation Room</option>
+        <option value="World News">World News</option>
+        <option value="War & Conflict">War & Conflict</option>
+        <option value="GAA">GAA</option>
+        <option value="Soccer">Soccer</option>
+        <option value="Business">Business</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Crime">Crime & Courts</option>
+        <option value="Health">Health</option>
+        <option value="Technology">Technology</option>
+      </select>
+
+      <label for="article-image">Photograph URL</label>
+      <input
+        type="url"
+        id="article-image"
+        placeholder="https://example.com/image.jpg">
+
+      <label for="article-author">Author</label>
+      <input
+        type="text"
+        id="article-author"
+        value="News2Day Newsdesk"
+        required>
+
+      <label>
+        <input type="checkbox" id="article-breaking">
+        Mark as BREAKING NEWS
+      </label>
+
+      <label>
+        <input type="checkbox" id="article-published">
+        Publish article immediately
+      </label>
+
+      <button type="submit" class="admin-button">
+        PUBLISH ARTICLE
+      </button>
+
+      <button type="button" id="save-draft"
+        class="admin-button draft-button">
+        SAVE DRAFT
+      </button>
+
+      <button type="reset"
+        class="admin-button secondary-button">
+        CLEAR FORM
+      </button>
+
+      <div id="admin-status" class="admin-status"
+        role="status" aria-live="polite"></div>
+
+    </form>
   </section>
 
-  <section id="irish">
-    <h2>IRISH NEWS</h2>
-    <div id="irish-news" class="news-grid">Loading Irish news...</div>
+  <section class="admin-panel">
+    <h2>MANAGE NEWS ARTICLES</h2>
+    <p>View and manage your existing published articles and drafts.</p>
+
+    <div id="admin-articles" class="article-list">
+      <p>Connect to the administration API to load articles.</p>
+    </div>
   </section>
 
-  <section id="politics">
-    <h2>POLITICAL HUB</h2>
-    <div id="political-news" class="news-grid">Loading political news...</div>
+  <section class="admin-panel">
+    <h2>NEWSROOM QUICK LINKS</h2>
+    <p><a href="index.html">VIEW NEWS2DAY HOMEPAGE →</a></p>
+    <p><a href="article.html">VIEW ARTICLE READER →</a></p>
   </section>
 
-  <section id="situation">
-    <h2>SITUATION ROOM</h2>
-    <p>WAR | CONFLICT | INTERNATIONAL CRISES</p>
-    <div id="situation-news" class="news-grid">Loading world news...</div>
-  </section>
-
-  <section id="sport">
-    <h2>SPORT</h2>
-    <h3>GAA</h3>
-    <div id="gaa-news" class="news-grid">Loading GAA news...</div>
-    <h3>SOCCER</h3>
-    <div id="soccer-news" class="news-grid">Loading soccer news...</div>
-  </section>
-
-  <section>
-    <h2>SEARCH NEWS2DAY</h2>
-    <input id="search" type="search" placeholder="Search stories...">
-    <button onclick="searchNews()">SEARCH</button>
-    <div id="search-results" class="news-grid"></div>
-  </section>
 </main>
 
-<footer>
-  <h2>NEWS2DAY</h2>
+<footer class="admin-footer">
+  <h3>NEWS2DAY ADMINISTRATION</h3>
   <p>Your Daily Dose of Bullshit</p>
-  <p>Irish news. World news. Sport. Politics.</p>
-  <p>© <span id="year"></span> News2Day</p>
+  <p>Editorial Management System</p>
 </footer>
 
-<script src="articles.js"></script>
-<script src="script.js"></script>
+<script src="admin.js"></script>
+
 </body>
 </html>
