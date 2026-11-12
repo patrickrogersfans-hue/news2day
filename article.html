@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101010">
+<title>News Article | News2Day</title>
+<meta name="description" content="Read the full story on News2Day.">
+<link rel="stylesheet" href="style.css">
+
+<style>
+.article-page {
+  max-width: 850px;
+  margin: 35px auto;
+  padding: 25px;
+  background: white;
+  border: 1px solid #ddd;
+}
+.article-page h1 {
+  font-size: 34px;
+  line-height: 1.2;
+  margin: 15px 0;
+}
+.article-image {
+  width: 100%;
+  max-height: 450px;
+  object-fit: cover;
+  margin: 20px 0;
+}
+.article-details {
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+.article-body {
+  font-size: 17px;
+  line-height: 1.9;
+  white-space: pre-line;
+}
+.article-body p {
+  margin-bottom: 18px;
+}
+.article-back {
+  display: inline-block;
+  background: #e50914;
+  color: white;
+  padding: 10px 18px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+.article-share {
+  margin-top: 25px;
+}
+@media(max-width:600px) {
+  .article-page {
+    margin: 15px 10px;
+    padding: 17px;
+  }
+  .article-page h1 {
+    font-size: 26px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="topbar">
+    NEWS2DAY ONLINE NEWSROOM
+    <span id="article-date"></span>
+  </div>
+
+  <div class="branding">
+    <a href="index.html">
+      <h1>NEWS<span>2</span>DAY</h1>
+    </a>
+    <p>Your Daily Dose of Bullshit</p>
+  </div>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="index.html#breaking">Breaking News</a>
+    <a href="index.html#irish">Irish News</a>
+    <a href="index.html#politics">Political Hub</a>
+    <a href="index.html#situation">Situation Room</a>
+    <a href="index.html#sport">Sport</a>
+  </nav>
+</header>
+
+<main class="article-page">
+
+  <a href="index.html" class="article-back">
+    ← BACK TO NEWS2DAY
+  </a>
+
+  <div id="article-content">
+    <p>Loading article...</p>
+  </div>
+
+  <div class="article-share">
+    <button id="share-button">SHARE THIS STORY</button>
+  </div>
+
+</main>
+
+<footer>
+  <h2>NEWS2DAY</h2>
+  <p>Your Daily Dose of Bullshit</p>
+  <p>© <span id="footer-year"></span> News2Day</p>
+</footer>
+
+<script>
+const API = "/api/articles";
+
+async function loadArticle() {
+  const container = document.getElementById("article-content");
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  document.getElementById("footer-year").textContent =
+    new Date().getFullYear();
+
+  document.getElementById("article-date").textContent =
+    new Date().toLocaleDateString("en-IE");
+
+  if (!id) {
+    container.textContent = "No article selected.";
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      API + "?id=" + encodeURIComponent(id),
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      throw new Error("Article unavailable");
+    }
+
+    const data = await response.json();
+
+    const article = data.article || data;
+
+    if (!article || !article.title) {
+      throw new Error("Article not found");
+    }
+
+    if (article.published === false) {
+      throw new Error("This article is not published.");
+    }
+
+    document.title = article.title + " | News2Day";
+
+    const category = document.createElement("span");
+    category.className = "category";
+    category.textContent = article.category || "News";
+
+    const heading = document.createElement("h1");
+    heading.textContent = article.title;
+
+    const summary = document.createElement("p");
+    summary.textContent = article.summary || "";
+    summary.style.fontWeight = "bold";
+    summary.style.fontSize = "18px";
+
+    const details = document.createElement("div");
+    details.className = "article-details";
+
+    const date = new Date(article.publishedAt);
+
+    details.textContent =
+      "News2Day Newsdesk | " +
+      (isNaN(date.getTime())
+        ? ""
+        : date.toLocaleString("en-IE"));
+
+    container.replaceChildren(
+      category,
+      heading,
+      summary,
+      details
+    );
+
+    if (article.image) {
+      const image = document.createElement("img");
+      image.className = "article-image";
+      image.src = article.image;
+      image.alt = article.title;
+      image.onerror = () => image.remove();
+      container.appendChild(image);
+    }
+
+    const body = document.createElement("div");
+    body.className = "article-body";
+
+    const paragraphs = String(
+      article.content || "Full article text is not available."
+    ).split(/\n+/);
+
+    paragraphs.forEach(text => {
+      const paragraph = document.createElement("p");
+      paragraph.textContent = text;
+      body.appendChild(paragraph);
+    });
+
+    container.appendChild(body);
+
+  } catch (error) {
+    container.textContent =
+      "This article could not be loaded. Please try again later.";
+    console.error(error);
+  }
+}
+
+document.getElementById("share-button").addEventListener(
+  "click",
+  async () => {
+    const shareData = {
+      title: document.title,
+      url: window.location.href
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareData.url);
+        alert("Article link copied!");
+      } else {
+        alert("Copy this page address to share the story.");
+      }
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        alert("Unable to share this story.");
+      }
+    }
+  }
+);
+
+loadArticle();
+</script>
+
+</body>
+</html>
