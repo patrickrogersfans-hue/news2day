@@ -1,1 +1,468 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News2Day - Global Insights & Daily Stories</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
 
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-green-500 to-emerald-400 p-2 rounded-xl text-white font-bold text-xl shadow-lg shadow-green-500/20">
+                    N2D
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">News2Day</span>
+                    <span class="block text-xs text-slate-500 dark:text-slate-400 font-medium">news2day.world</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600 dark:text-slate-300">
+                <a href="#" onclick="filterCategory('Ireland')" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">Ireland</a>
+                <a href="#articles" onclick="filterCategory('UK')" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">UK</a>
+                <a href="#articles" onclick="filterCategory('USA')" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">USA</a>
+                <a href="#articles" onclick="filterCategory('Tech')" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">Tech</a>
+                <a href="#articles" onclick="filterCategory('Culture')" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">Culture</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-3">
+                <!-- Theme Toggle -->
+                <button onclick="toggleDarkMode()" aria-label="Toggle Theme" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                    <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg id="theme-icon-light" class="w-5 h-5 block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <!-- Live Automated Breaking News Ticker -->
+        <div class="mb-8 bg-slate-900 border border-slate-800 rounded-2xl p-4 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+            <div class="flex items-center space-x-3 w-full sm:w-auto">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase bg-red-500/20 text-red-400 border border-red-500/30">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-ping mr-2"></span>
+                    Live Feed
+                </span>
+                <span id="ticker-region" class="text-xs font-semibold uppercase tracking-wider text-green-400 bg-green-500/10 px-2 py-0.5 rounded">Ireland</span>
+            </div>
+            <div id="live-ticker-text" class="text-sm font-medium text-slate-200 truncate max-w-2xl flex-grow text-center sm:text-left">
+                Initializing real-time automated news feed across Ireland, UK, and USA...
+            </div>
+            <div class="flex space-x-2 text-xs">
+                <button onclick="switchTickerRegion('Ireland')" class="ticker-tab px-3 py-1 rounded bg-green-500 text-white font-medium">IE</button>
+                <button onclick="switchTickerRegion('UK')" class="ticker-tab px-3 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700">UK</button>
+                <button onclick="switchTickerRegion('USA')" class="ticker-tab px-3 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700">USA</button>
+            </div>
+        </div>
+
+        <!-- Breaking News Banner -->
+        <section class="mb-10">
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-900 dark:to-slate-950 text-white shadow-2xl border border-slate-800">
+                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="relative p-6 sm:p-10 lg:p-12 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                    <div class="max-w-2xl">
+                        <div class="inline-flex items-center space-x-2 bg-green-500/20 border border-green-500/30 text-green-400 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+                            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                            Ireland Lead Story
+                        </div>
+                        <h1 id="featured-title" class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-4">Dublin Port Announces €150M Expansion for Offshore Renewable Energy Hub</h1>
+                        <p id="featured-excerpt" class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">Major infrastructure investment aims to position Irish ports as primary service centers for Atlantic floating wind farms.</p>
+                        <button onclick="openArticle('featured-ie')" class="inline-flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white font-medium px-6 py-3 rounded-xl shadow-lg shadow-green-500/30 transition-all transform hover:-translate-y-0.5">
+                            <span>Read Full Story</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                    <div class="w-full lg:w-96 h-56 rounded-xl overflow-hidden shadow-md bg-slate-800 relative flex-shrink-0">
+                        <img id="featured-image" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80" alt="Featured News" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Tabs -->
+        <section id="articles" class="mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-tight">Latest Headlines</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Prioritizing Irish news with live automated updates across UK & USA.</p>
+                </div>
+                <div class="flex items-center space-x-2 overflow-x-auto pb-2 sm:pb-0" id="category-filters">
+                    <button onclick="filterCategory('Ireland')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-green-500 text-white shadow-sm transition-all whitespace-nowrap">🇮🇪 Ireland</button>
+                    <button onclick="filterCategory('UK')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all whitespace-nowrap">🇬🇧 UK</button>
+                    <button onclick="filterCategory('USA')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all whitespace-nowrap">🇺🇸 USA</button>
+                    <button onclick="filterCategory('Tech')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all whitespace-nowrap">Tech</button>
+                    <button onclick="filterCategory('Culture')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all whitespace-nowrap">Culture</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Articles Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16" id="articles-grid">
+            <!-- Dynamically populated via JavaScript -->
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500 dark:text-slate-400">
+            <div class="flex items-center space-x-2">
+                <span class="font-bold text-slate-900 dark:text-white">News2Day</span>
+                <span>&copy; 2026 news2day.world. All rights reserved.</span>
+            </div>
+            <div class="flex space-x-6">
+                <span class="hover:text-green-500 cursor-pointer transition-colors">Privacy Policy</span>
+                <span class="hover:text-green-500 cursor-pointer transition-colors">Terms of Service</span>
+                <span class="hover:text-green-500 cursor-pointer transition-colors">Editorial Guidelines</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Article Reader Modal -->
+    <div id="article-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 dark:border-slate-800 transform scale-95 transition-transform duration-300" id="modal-content-box">
+            <div class="relative h-64 sm:h-80 w-full">
+                <img id="modal-image" src="" alt="Article Cover" class="w-full h-full object-cover">
+                <button onclick="closeArticle()" aria-label="Close modal" class="absolute top-4 right-4 bg-slate-900/60 hover:bg-slate-900 text-white p-2 rounded-full backdrop-blur-md transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 sm:p-8">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span id="modal-category" class="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-green-500/10 text-green-500"></span>
+                    <span id="modal-date" class="text-xs text-slate-500 dark:text-slate-400"></span>
+                </div>
+                <h2 id="modal-title" class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-4"></h2>
+                <div id="modal-body" class="space-y-4 text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+                    <!-- Article full text -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Comprehensive articles database featuring Ireland, UK, USA, Tech, and Culture
+        const articles = [
+            {
+                id: 1,
+                category: "Ireland",
+                title: "Dublin Port Announces €150M Expansion for Offshore Renewable Energy Hub",
+                excerpt: "Major infrastructure investment aims to position Irish ports as primary service centers for Atlantic floating wind farms.",
+                date: "Nov 12, 2026",
+                image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80",
+                content: [
+                    "Dublin Port Company has unveiled a sweeping €150 million capital development plan designed to transform Dublin harbor into a cutting-edge logistics and assembly hub for offshore renewable energy.",
+                    "With Ireland targeting substantial offshore wind generation capacity off the east and southern coasts, this dedicated facility will handle ultra-heavy turbine components and staging operations.",
+                    "Minister for Transport noted that the project is vital for meeting national climate targets while securing long-term regional economic growth."
+                ]
+            },
+            {
+                id: 2,
+                category: "Ireland",
+                title: "Central Bank Report Highlights Robust Growth in Regional Irish Tech Hubs",
+                excerpt: "Cork, Galway, and Limerick record significant increases in high-value engineering and software employment.",
+                date: "Nov 12, 2026",
+                image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+                content: [
+                    "A new economic assessment published by the Central Bank demonstrates continued decentralization of Ireland's tech economy, with Cork, Galway, and Limerick outperforming national averages in engineering job creation.",
+                    "Local universities and technological institutes played a crucial role by aligning specialized postgraduate curricula with emerging demands in medtech, cybersecurity, and green hydrogen systems.",
+                    "Housing and transport infrastructure remain primary focal points for local authorities as regional populations continue to expand."
+                ]
+            },
+            {
+                id: 3,
+                category: "UK",
+                title: "Bank of England Holds Interest Rates Steady Amid Stabilizing Inflation Metrics",
+                excerpt: "Monetary policy committee votes 7-2 to maintain current rates as core service inflation aligns with target projections.",
+                date: "Nov 12, 2026",
+                image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80",
+                content: [
+                    "The Bank of England opted to keep baseline interest rates unchanged this month, citing steady progress in subduing core inflation across retail and energy sectors.",
+                    "Financial markets responded positively, with sterling remaining stable against major global currencies as analysts weigh potential easing timelines for early next year.",
+                    "High street mortgage providers have begun introducing more competitive fixed-rate products in anticipation of future market adjustments."
+                ]
+            },
+            {
+                id: 4,
+                category: "UK",
+                title: "London Transit Authority Expands Autonomous Bus Trials Across Greater London",
+                excerpt: "Zero-emission self-driving electric buses begin overnight passenger testing on dedicated commuter corridors.",
+                date: "Nov 11, 2026",
+                image: "https://images.unsplash.com/photo-1509439543977-17ac66ee6e6c?auto=format&fit=crop&w=800&q=80",
+                content: [
+                    "Transport for London has launched the next phase of its automated public transport initiative, deploying Level 4 autonomous electric buses on select suburban routes.",
+                    "Equipped with multi-redundant optical sensors and real-time traffic telemetry, the fleet aims to optimize timetable adherence and passenger safety during off-peak hours.",
+                    "Commuters have expressed cautious optimism following successful closed-circuit trials earlier this autumn."
+                ]
+            },
+            {
+                id: 5,
+                category: "USA",
+                title: "Federal Reserve Signals Balanced Approach to Economic Soft Landing",
+                excerpt: "Chairman remarks point to resilient labor markets and steady productivity gains across US manufacturing sectors.",
+                date: "Nov 12, 2026",
+                image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+                content: [
+                    "Federal Reserve officials delivered an optimistic assessment of the US economy, highlighting robust consumer spending and accelerating productivity driven by automation and artificial intelligence integration.",
+                    "Wall Street indexes rallied following the announcement, as institutional investors gained renewed confidence in a sustained economic expansion path.",
+                    "Labor department figures indicate continued wage growth keeping pace with adjusted cost-of-living metrics."
+                ]
+            },
+            {
+                id: 6,
+                category: "USA",
+                title: "Silicon Valley Pioneers Unveil Breakthrough Grid-Scale Battery Storage",
+                excerpt: "New iron-air battery chemistry promises 100-hour backup power for municipal energy grids at a fraction of traditional lithium costs.",
+                date: "Nov 11, 2026",
+                image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80",
+                content: [
+                    "Clean energy startups in California have commercialized a novel iron-air battery system capable of storing multi-day renewable energy reserves for large-scale utility grids.",
+                    "Utilizing abundant earth elements, the technology dramatically lowers capital expenditure requirements for states transitioning away from peaker power plants.",
+                    "Major utility providers across the American West have already signed preliminary procurement agreements for upcoming grid stabilization projects."
+                ]
+            },
+            {
+                id: 7,
+                category: "Ireland",
+                title: "Wild Atlantic Way Tourism Reaches Record Visitor Numbers in 2026",
+                excerpt: "Sustainable tourism initiatives and cultural festivals draw international travelers from North America and mainland Europe.",
+                date: "Nov 10, 2026",
+                image: "https://images.unsplash.com/photo-1509937528035-ad76255b0cf5?auto=format&fit=crop&w=800&q=80",
+                content: [
+                    "Fáilte Ireland reported unprecedented visitor numbers along the scenic Wild Atlantic Way corridor this year, underpinned by strong growth in eco-friendly hospitality and heritage trails.",
+                    "Local artisan food producers and guided geological tours experienced record engagement, boosting rural economies across the western seaboard.",
+                    "Planning is already underway for expanded winter tourism programs to support year-round regional employment."
+                ]
+            },
+            {
+                id: 8,
+                category: "Tech",
+                title: "Global Semiconductor Alliance Announces Next-Gen 1nm Fabrication Milestone",
+                excerpt: "Collaborative research initiative overcomes quantum tunneling obstacles to produce functional ultra-dense microchips.",
+                date: "Nov 10, 2026",
+                image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+                content: [
+                    "Semiconductor manufacturers have successfully fabricated working prototype wafers at the 1-nanometer node, introducing gate-all-around architectures that drastically reduce thermal dissipation.",
+                    "The breakthrough will enable dramatic performance leaps in edge AI devices, mobile processors, and scientific supercomputing clusters.",
+                    "Commercial foundry production is scheduled to begin in late 2027."
+                ]
+            }
+        ];
+
+        // Automated Live Breaking News Feeds by Region
+        const liveFeeds = {
+            Ireland: [
+                "🇮🇪 [LIVE 16:02] Taoiseach confirms additional Exchequer funding for National Broadband rollout in rural counties.",
+                "🇮🇪 [LIVE 15:45] Met Éireann issues status yellow wind warning for western coastal counties ahead of Atlantic front.",
+                "🇮🇪 [LIVE 15:10] Shannon Airport reports record international passenger arrivals for the autumn tourism season.",
+                "🇮🇪 [LIVE 14:30] Dublin City Council approves pedestrianization pilot for historic south side commercial streets."
+            ],
+            UK: [
+                "🇬🇧 [LIVE 16:01] Chancellor announces Treasury backing for new green manufacturing zones across Northern England.",
+                "🇬🇧 [LIVE 15:30] Office for National Statistics reports steady growth in domestic retail sales volumes.",
+                "🇬🇧 [LIVE 14:50] Scottish Hydro unveils world-scale pumped storage hydro facility in the Highlands."
+            ],
+            USA: [
+                "🇺🇸 [LIVE 16:00] NASA successfully completes final integration testing for Artemis lunar habitat modules.",
+                "🇺🇸 [LIVE 15:20] New York Stock Exchange closes higher following positive retail earnings reports.",
+                "🇺🇸 [LIVE 14:15] Department of Energy awards $2B in grants for domestic electric vehicle charging infrastructure."
+            ]
+        };
+
+        let currentRegion = 'Ireland';
+        let feedIndex = 0;
+
+        // Cycle live breaking news ticker automatically
+        function updateTicker() {
+            const feedArray = liveFeeds[currentRegion];
+            const tickerEl = document.getElementById('live-ticker-text');
+            if (tickerEl && feedArray) {
+                tickerEl.style.opacity = 0;
+                setTimeout(() => {
+                    tickerEl.textContent = feedArray[feedIndex % feedArray.length];
+                    tickerEl.style.opacity = 1;
+                    feedIndex++;
+                }, 300);
+            }
+        }
+
+        function switchTickerRegion(region) {
+            currentRegion = region;
+            feedIndex = 0;
+            document.getElementById('ticker-region').textContent = region;
+            
+            // Update tab styles
+            document.querySelectorAll('.ticker-tab').forEach(btn => {
+                if (btn.textContent.includes(region)) {
+                    btn.className = "ticker-tab px-3 py-1 rounded bg-green-500 text-white font-medium";
+                } else {
+                    btn.className = "ticker-tab px-3 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700";
+                }
+            });
+            updateTicker();
+        }
+
+        // Render Articles Grid (Defaults to Ireland)
+        function renderArticles(filter = 'Ireland') {
+            const grid = document.getElementById('articles-grid');
+            grid.innerHTML = '';
+
+            const filtered = articles.filter(a => a.category === filter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 dark:text-slate-400">No articles currently available for ${filter}. Check back soon for live updates!</div>`;
+                return;
+            }
+
+            filtered.forEach(article => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group cursor-pointer";
+                card.onclick = () => openArticle(article.id);
+
+                card.innerHTML = `
+                    <div class="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                        <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-green-600 dark:text-green-400">
+                            ${article.category}
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-xs text-slate-500 dark:text-slate-400 mb-2">${article.date}</div>
+                        <h3 class="text-lg font-bold tracking-tight mb-3 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">${article.title}</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 line-clamp-3">${article.excerpt}</p>
+                        <div class="mt-auto flex items-center text-sm font-semibold text-green-600 dark:text-green-400 group-hover:translate-x-1 transition-transform">
+                            <span>Read article</span>
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Category Filter Handler
+        function filterCategory(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.textContent.includes(category)) {
+                    btn.className = "filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-green-500 text-white shadow-sm transition-all whitespace-nowrap";
+                } else {
+                    btn.className = "filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all whitespace-nowrap";
+                }
+            });
+            renderArticles(category);
+        }
+
+        // Modal Controls
+        function openArticle(id) {
+            const article = id === 'featured-ie' ? articles[0] : articles.find(a => a.id === id);
+            if (!article) return;
+
+            document.getElementById('modal-image').src = article.image;
+            document.getElementById('modal-category').textContent = article.category;
+            document.getElementById('modal-date').textContent = article.date;
+            document.getElementById('modal-title').textContent = article.title;
+            
+            const bodyContainer = document.getElementById('modal-body');
+            bodyContainer.innerHTML = '';
+            article.content.forEach(paragraph => {
+                const p = document.createElement('p');
+                p.textContent = paragraph;
+                bodyContainer.appendChild(p);
+            });
+
+            const modal = document.getElementById('article-modal');
+            const box = document.getElementById('modal-content-box');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+                box.classList.add('scale-100');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeArticle() {
+            const modal = document.getElementById('article-modal');
+            const box = document.getElementById('modal-content-box');
+            modal.classList.add('opacity-0');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const darkIcon = document.getElementById('theme-icon-dark');
+            const lightIcon = document.getElementById('theme-icon-light');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                darkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                darkIcon.classList.remove('hidden');
+                lightIcon.classList.add('hidden');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderArticles('Ireland');
+            updateTicker();
+            // Rotate live ticker every 6 seconds
+            setInterval(updateTicker, 6000);
+
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-icon-dark').classList.add('hidden');
+                document.getElementById('theme-icon-light').classList.remove('hidden');
+            }
+        };
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('article-modal');
+            if (event.target === modal) {
+                closeArticle();
+            }
+        }
+    </script>
+</body>
+</html>
