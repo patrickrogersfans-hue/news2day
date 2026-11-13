@@ -268,29 +268,52 @@
             document.getElementById('article-modal').classList.remove('hidden');
         }
 
-        function closeModal() {
-            document.getElementById('article-modal').classList.add('hidden');
-        }
+        
+</html
 
-        // 60-Second Breaking News Ticker Auto-Cycle
-        const tickerMessages = [
-            "• [DUBLIN] Gardaí maintain heavy security cordon around Dáil Éireann as evening demonstrations continue.",
-            "• [SPORT] Irish provinces prepare for high-stakes winter rugby block across domestic and European fixtures.",
-            "• [INTERNATIONAL] Emergency services respond to US structural collapse and metropolitan shooting incidents.",
-            "• [POLITICS] Taoiseach Micheál Martin addresses international delegates at Dublin's landmark EU security summit."
-        ];
-        let tickerIndex = 0;
-        setInterval(() => {
-            tickerIndex = (tickerIndex + 1) % tickerMessages.length;
-            const tickerEl = document.getElementById('breaking-ticker');
-            tickerEl.style.opacity = 0;
-            setTimeout(() => {
-                tickerEl.innerText = tickerMessages[tickerIndex];
-                tickerEl.style.opacity = 1;
-            }, <!-- NEWS2DAY LIVE WEBSITE ENGINE -->
-<script src="/script.js" defer></script> }, 60000);
-    
-    <!-- Deployment Build Hash: v2026.11.12-revA -->
+function closeModal() {
+    document.getElementById('article-modal').classList.add('hidden');
+}
+
+// 60-Second Breaking News Ticker Auto-Cycle
+const tickerMessages = [
+    "• NEWS2DAY — Your daily dose of truth and news.",
+    "• DUBLIN — Latest breaking news and local developments.",
+    "• IRELAND — National news and political updates.",
+    "• INTERNATIONAL — Global news and world affairs.",
+    "• SPORT — GAA, soccer, rugby and international sport."
+];
+
+let tickerIndex = 0;
+
+function startBreakingTicker() {
+    const tickerEl = document.getElementById('breaking-ticker');
+
+    if (!tickerEl) return;
+
+    setInterval(() => {
+        tickerIndex = (tickerIndex + 1) % tickerMessages.length;
+
+        tickerEl.style.opacity = 0;
+
+        setTimeout(() => {
+            tickerEl.innerText = tickerMessages[tickerIndex];
+            tickerEl.style.opacity = 1;
+        }, 300);
+
+    }, 60000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    startBreakingTicker();
+});
+
+// NEWS2DAY LIVE WEBSITE ENGINE
+</script>
+
+<script src="/script.js" defer></script>
+
+<!-- Deployment Build Hash: v2026.11.12-revB -->
 
 </body>
-</html
+</html>
